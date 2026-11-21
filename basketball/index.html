@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hoops Data - Jugadores de Baloncesto</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Interfaz principal -->
+  <header class="hero">
+    <div class="hero__inner">
+      <h1 class="hero__title">Hoops<span>Data</span></h1>
+      <p class="hero__subtitle">Biografías, trofeos e imágenes de las leyendas del baloncesto</p>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__value" id="statPlayers">0</span>
+          <span class="stat__label">Jugadores</span>
+        </div>
+        <div class="stat">
+          <span class="stat__value" id="statTrophies">0</span>
+          <span class="stat__label">Trofeos listados</span>
+        </div>
+        <div class="stat">
+          <span class="stat__value" id="statImages">0</span>
+          <span class="stat__label">Imágenes añadidas</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Barra de herramientas -->
+    <section class="toolbar">
+      <input
+        type="search"
+        id="searchInput"
+        class="toolbar__search"
+        placeholder="Buscar jugador, equipo o posición..."
+        aria-label="Buscar jugador"
+      />
+      <select id="sortSelect" class="toolbar__select" aria-label="Ordenar jugadores">
+        <option value="default">Orden original</option>
+        <option value="name">Nombre (A-Z)</option>
+        <option value="trophies">Más trofeos</option>
+      </select>
+      <button id="openFormBtn" class="btn btn--primary">+ Añadir jugador</button>
+    </section>
+
+    <!-- Rejilla de casillas de jugadores -->
+    <section id="playersGrid" class="grid" aria-live="polite"></section>
+    <p id="emptyMessage" class="empty hidden">No se encontraron jugadores.</p>
+  </main>
+
+  <!-- Formulario para añadir jugador -->
+  <dialog id="playerDialog" class="dialog">
+    <form id="playerForm" class="form" method="dialog">
+      <h2>Nuevo jugador</h2>
+
+      <label>Nombre
+        <input type="text" name="name" required maxlength="60" />
+      </label>
+      <div class="form__row">
+        <label>Posición
+          <input type="text" name="position" maxlength="40" placeholder="Base, Escolta..." />
+        </label>
+        <label>Equipo(s)
+          <input type="text" name="team" maxlength="60" />
+        </label>
+      </div>
+      <label>Mini biografía
+        <textarea name="bio" rows="4" required maxlength="600"></textarea>
+      </label>
+      <label>Trofeos (uno por línea)
+        <textarea name="trophies" rows="4" placeholder="Campeón NBA (2020)&#10;MVP de la temporada"></textarea>
+      </label>
+
+      <div class="form__actions">
+        <button type="button" id="cancelFormBtn" class="btn">Cancelar</button>
+        <button type="submit" class="btn btn--primary">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Plantilla de casilla de jugador -->
+  <template id="playerCardTemplate">
+    <article class="card">
+      <div class="card__image">
+        <img class="card__img hidden" alt="" />
+        <div class="card__placeholder">
+          <span class="card__initials"></span>
+          <span class="card__hint">Añade una imagen</span>
+        </div>
+        <div class="card__image-actions">
+          <label class="btn btn--small">
+            Subir imagen
+            <input type="file" accept="image/*" class="card__file" hidden />
+          </label>
+          <button type="button" class="btn btn--small btn--ghost card__remove-img hidden">Quitar</button>
+        </div>
+      </div>
+
+      <div class="card__body">
+        <header class="card__header">
+          <h2 class="card__name"></h2>
+          <p class="card__meta"></p>
+        </header>
+
+        <section class="card__section">
+          <h3>Biografía</h3>
+          <p class="card__bio"></p>
+        </section>
+
+        <section class="card__section">
+          <h3>Trofeos <span class="card__count"></span></h3>
+          <ul class="card__trophies"></ul>
+        </section>
+      </div>
+
+      <button type="button" class="card__delete hidden" title="Eliminar jugador">&times;</button>
+    </article>
+  </template>
+
+  <footer class="footer">
+    <p>Las imágenes y jugadores añadidos se guardan en tu navegador.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
