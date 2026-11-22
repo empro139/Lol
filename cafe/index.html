@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Café Aurora: café de especialidad con granos mexicanos, panadería artesanal y un espacio tranquilo para trabajar o platicar." />
+  <title>Café Aurora | Café de especialidad</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <!-- Encabezado y navegación -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a class="logo" href="#inicio" aria-label="Café Aurora, ir al inicio">
+        <img src="images/favicon.svg" alt="" width="36" height="36" />
+        <span>Café Aurora</span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="mainNav" aria-label="Navegación principal">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#nosotros">Nosotros</a></li>
+          <li><a class="nav__link" href="#menu">Menú</a></li>
+          <li><a class="nav__link" href="#horario">Horario</a></li>
+          <li><a class="nav__link" href="#ubicacion">Ubicación</a></li>
+          <li><a class="nav__link" href="#contacto">Contacto</a></li>
+        </ul>
+        <a class="btn btn--small nav__cta" href="#menu">Ver menú</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Portada -->
+    <section class="hero" id="inicio">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Café de especialidad · Desde 2019</p>
+          <h1 class="hero__title">El mejor momento del día empieza con una buena taza</h1>
+          <p class="hero__lead">
+            Tostamos granos de Chiapas, Veracruz y Oaxaca en pequeños lotes y los acompañamos con pan horneado cada mañana.
+          </p>
+          <div class="hero__actions">
+            <a class="btn" href="#menu">Ver el menú</a>
+            <a class="btn btn--outline" href="#ubicacion">Cómo llegar</a>
+          </div>
+          <p class="status" id="openStatus" aria-live="polite"></p>
+        </div>
+        <div class="hero__image">
+          <img src="images/hero.svg" alt="Ilustración de una taza de café humeante con arte latte en forma de corazón" width="560" height="520" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Nosotros -->
+    <section class="section" id="nosotros" aria-labelledby="nosotros-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Nosotros</p>
+          <h2 class="section__title" id="nosotros-title">Un café de barrio con café de verdad</h2>
+          <p class="section__lead">
+            Café Aurora es una cafetería de especialidad pequeña y acogedora. Aquí vienes a desayunar, a trabajar con calma o a platicar con amigos mientras preparamos tu bebida a mano.
+          </p>
+        </div>
+
+        <ul class="features">
+          <li class="feature">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)" fill="currentColor"/><path d="M8 18c3-3 5-8 8-12" stroke="#fffaf3" stroke-width="1.6" fill="none"/></svg>
+            </span>
+            <h3>Granos de origen</h3>
+            <p>Trabajamos directo con productores mexicanos y tostamos cada semana para que el café siempre esté fresco.</p>
+          </li>
+          <li class="feature">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 15c1-5 5-8 9-8s8 3 9 8c-2 1-4 0-5-2-1 2-2 3-4 3s-3-1-4-3c-1 2-3 3-5 2z" fill="currentColor"/></svg>
+            </span>
+            <h3>Pan artesanal</h3>
+            <p>Conchas, croissants y postres horneados aquí mismo todas las mañanas, con opciones veganas.</p>
+          </li>
+          <li class="feature">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28"><path d="M12 18a2 2 0 1 1 0 .01M7.8 14.2a6 6 0 0 1 8.4 0M4.6 11a10.5 10.5 0 0 1 14.8 0" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+            </span>
+            <h3>Espacio para quedarte</h3>
+            <p>Wifi gratis, enchufes en todas las mesas, terraza con plantas y un ambiente tranquilo.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Menú -->
+    <section class="section section--alt" id="menu" aria-labelledby="menu-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Menú</p>
+          <h2 class="section__title" id="menu-title">¿Qué se te antoja probar?</h2>
+          <p class="section__lead">Filtra por categoría y agrega lo que quieras probar a tu lista. Así llegas sabiendo qué pedir.</p>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filtrar el menú por categoría" id="menuFilters">
+          <button type="button" class="filter is-active" data-filter="todo" aria-pressed="true">Todo</button>
+          <button type="button" class="filter" data-filter="caliente" aria-pressed="false">Cafés calientes</button>
+          <button type="button" class="filter" data-filter="frio" aria-pressed="false">Bebidas frías</button>
+          <button type="button" class="filter" data-filter="te" aria-pressed="false">Tés</button>
+          <button type="button" class="filter" data-filter="pan" aria-pressed="false">Panadería y postres</button>
+        </div>
+
+        <div class="menu-layout">
+          <ul class="menu-grid" id="menuGrid"></ul>
+
+          <!-- Lista de lo que el visitante quiere probar -->
+          <aside class="picks" id="picks" aria-labelledby="picks-title">
+            <h3 class="picks__title" id="picks-title">Quiero probar</h3>
+            <p class="picks__empty" id="picksEmpty">Todavía no eliges nada. Toca <strong>Agregar</strong> en lo que se te antoje.</p>
+            <ul class="picks__list" id="picksList"></ul>
+            <div class="picks__footer" id="picksFooter" hidden>
+              <p class="picks__total">Total aproximado <strong id="picksTotal">$0</strong></p>
+              <button type="button" class="btn btn--small btn--outline" id="picksClear">Vaciar lista</button>
+            </div>
+          </aside>
+        </div>
+
+        <p class="note">Todas las bebidas se pueden preparar con leche de avena, almendra o deslactosada sin costo extra.</p>
+      </div>
+    </section>
+
+    <!-- Horario -->
+    <section class="section" id="horario" aria-labelledby="horario-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Horario</p>
+          <h2 class="section__title" id="horario-title">¿Cuándo estamos abiertos?</h2>
+          <p class="section__lead">Abrimos todos los días. Los fines de semana servimos desayunos hasta las 2 de la tarde.</p>
+          <p class="status status--big" id="openStatusBig" aria-live="polite"></p>
+        </div>
+
+        <table class="hours" aria-describedby="horario-title">
+          <caption class="visually-hidden">Horario de Café Aurora por día</caption>
+          <tbody id="hoursBody">
+            <tr data-day="1"><th scope="row">Lunes</th><td>7:30 – 21:00</td></tr>
+            <tr data-day="2"><th scope="row">Martes</th><td>7:30 – 21:00</td></tr>
+            <tr data-day="3"><th scope="row">Miércoles</th><td>7:30 – 21:00</td></tr>
+            <tr data-day="4"><th scope="row">Jueves</th><td>7:30 – 21:00</td></tr>
+            <tr data-day="5"><th scope="row">Viernes</th><td>7:30 – 22:00</td></tr>
+            <tr data-day="6"><th scope="row">Sábado</th><td>8:00 – 22:00</td></tr>
+            <tr data-day="0"><th scope="row">Domingo</th><td>9:00 – 18:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Ubicación -->
+    <section class="section section--alt" id="ubicacion" aria-labelledby="ubicacion-title">
+      <div class="container split split--reverse">
+        <div>
+          <p class="eyebrow">Ubicación</p>
+          <h2 class="section__title" id="ubicacion-title">¿Dónde encontrarnos?</h2>
+          <address class="address">
+            <strong>Café Aurora</strong><br />
+            Av. de los Granos 128, esquina con Calle Tostador<br />
+            Col. Centro, Ciudad de México
+          </address>
+          <ul class="directions">
+            <li><strong>A pie:</strong> a 5 minutos de la estación de metro más cercana.</li>
+            <li><strong>En bici:</strong> tenemos estacionamiento para bicicletas en la entrada.</li>
+            <li><strong>En coche:</strong> hay estacionamiento público a media cuadra.</li>
+          </ul>
+        </div>
+        <figure class="map">
+          <img src="images/map.svg" alt="Mapa ilustrado: Café Aurora está en la esquina de Av. de los Granos y Calle Tostador, junto a un parque" width="600" height="400" loading="lazy" />
+          <figcaption>Estamos en la esquina, frente al parque.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="section" id="contacto" aria-labelledby="contacto-title">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Contacto</p>
+          <h2 class="section__title" id="contacto-title">Escríbenos o llámanos</h2>
+          <p class="section__lead">Reservaciones para grupos, pedidos de pasteles o cualquier duda: con gusto te ayudamos.</p>
+          <ul class="contact-list">
+            <li>
+              <span class="contact-list__label">Teléfono</span>
+              <a href="tel:+525500000000">55 0000 0000</a>
+            </li>
+            <li>
+              <span class="contact-list__label">Correo</span>
+              <a href="mailto:hola@cafeaurora.example">hola@cafeaurora.example</a>
+            </li>
+            <li>
+              <span class="contact-list__label">Redes</span>
+              <span class="socials">
+                <a href="#contacto" aria-label="Instagram de Café Aurora">Instagram</a>
+                <a href="#contacto" aria-label="Facebook de Café Aurora">Facebook</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input id="name" name="name" type="text" autocomplete="name" required minlength="2" />
+            <p class="field__error" id="name-error"></p>
+          </div>
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+            <p class="field__error" id="email-error"></p>
+          </div>
+          <div class="field">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" rows="4" required minlength="10"></textarea>
+            <p class="field__error" id="message-error"></p>
+          </div>
+          <button class="btn" type="submit">Enviar mensaje</button>
+          <p class="form__success" id="formSuccess" role="status" hidden></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a class="logo logo--light" href="#inicio">
+        <img src="images/favicon.svg" alt="" width="32" height="32" />
+        <span>Café Aurora</span>
+      </a>
+      <nav aria-label="Navegación del pie de página">
+        <ul class="footer__nav">
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#menu">Menú</a></li>
+          <li><a href="#horario">Horario</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Café Aurora. Hecho con café y cariño.</p>
+    </div>
+  </footer>
+
+  <a class="to-top" href="#inicio" aria-label="Volver arriba" id="toTop">↑</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
