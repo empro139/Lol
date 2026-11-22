@@ -411,3 +411,33 @@ body {
     padding: 0.7rem 1rem;
   }
 }
+
+/* ---------- Aviso de guardado ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translate(-50%, 150%);
+  background: #1f7a4d;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s, opacity 0.25s;
+  z-index: 100;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.toast.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.toast--error {
+  background: #b03a2e;
+}

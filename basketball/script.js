@@ -145,16 +145,142 @@ function saveJSON(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
     return true;
   } catch {
-    alert("No se pudo guardar: el almacenamiento del navegador está lleno. Prueba con una imagen más pequeña.");
+    alert("No se pudo guardar: el almacenamiento del navegador está lleno.");
     return false;
   }
+}
+
+/* =========================================================
+   Almacén de imágenes (IndexedDB)
+   Las imágenes se guardan automáticamente en IndexedDB, que
+   tiene mucho más espacio que localStorage. Si el navegador
+   no lo soporta, se usa localStorage como respaldo.
+   ========================================================= */
+const imageStore = (() => {
+  const DB_NAME = "hoopsdata";
+  const STORE = "images";
+  let dbPromise = null;
+
+  function openDB() {
+    if (!("indexedDB" in window)) return Promise.reject(new Error("IndexedDB no disponible"));
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = () => request.result.createObjectStore(STORE);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      }).catch((error) => {
+        dbPromise = null;
+        throw error;
+      });
+    }
+    return dbPromise;
+  }
+
+  async function run(mode, action) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, mode);
+      const result = action(tx.objectStore(STORE));
+      tx.oncomplete = () => resolve(result && "result" in result ? result.result : undefined);
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error || new Error("Operación cancelada"));
+    });
+  }
+
+  // Respaldo con localStorage
+  const fallback = {
+    getAll: async () => loadJSON(STORAGE_KEYS.images, {}),
+    put: async (id, dataUrl) => {
+      const all = loadJSON(STORAGE_KEYS.images, {});
+      all[id] = dataUrl;
+      localStorage.setItem(STORAGE_KEYS.images, JSON.stringify(all));
+    },
+    delete: async (id) => {
+      const all = loadJSON(STORAGE_KEYS.images, {});
+      delete all[id];
+      localStorage.setItem(STORAGE_KEYS.images, JSON.stringify(all));
+    }
+  };
+
+  let useFallback = false;
+
+  return {
+    async getAll() {
+      try {
+        const db = await openDB();
+        const images = await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE, "readonly");
+          const store = tx.objectStore(STORE);
+          const out = {};
+          const cursorRequest = store.openCursor();
+          cursorRequest.onsuccess = () => {
+            const cursor = cursorRequest.result;
+            if (cursor) {
+              out[cursor.key] = cursor.value;
+              cursor.continue();
+            }
+          };
+          tx.oncomplete = () => resolve(out);
+          tx.onerror = () => reject(tx.error);
+        });
+
+        // Migra las imágenes guardadas por la versión anterior (localStorage)
+        const legacy = loadJSON(STORAGE_KEYS.images, null);
+        if (legacy && typeof legacy === "object") {
+          for (const [id, dataUrl] of Object.entries(legacy)) {
+            if (!(id in images)) {
+              await run("readwrite", (store) => store.put(dataUrl, id));
+              images[id] = dataUrl;
+            }
+          }
+          localStorage.removeItem(STORAGE_KEYS.images);
+        }
+        return images;
+      } catch {
+        useFallback = true;
+        return fallback.getAll();
+      }
+    },
+    put(id, dataUrl) {
+      return useFallback ? fallback.put(id, dataUrl) : run("readwrite", (s) => s.put(dataUrl, id));
+    },
+    delete(id) {
+      return useFallback ? fallback.delete(id) : run("readwrite", (s) => s.delete(id));
+    }
+  };
+})();
+
+/** Pide al navegador que no borre los datos guardados de la página. */
+async function requestPersistentStorage() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      const persisted = await navigator.storage.persisted();
+      if (!persisted) await navigator.storage.persist();
+    }
+  } catch {
+    /* Algunos navegadores no lo soportan; no es crítico. */
+  }
+}
+
+/* =========================================================
+   Avisos (toast)
+   ========================================================= */
+let toastTimer = null;
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = `toast toast--${type} is-visible`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
 }
 
 /* =========================================================
    Estado de la aplicación
    ========================================================= */
 const state = {
-  images: loadJSON(STORAGE_KEYS.images, {}),
+  images: {},
   customPlayers: loadJSON(STORAGE_KEYS.customPlayers, []),
   search: "",
   sort: "default"
@@ -203,7 +329,7 @@ function normalize(text) {
 }
 
 /** Reduce la imagen para que quepa en localStorage. */
-function resizeImage(file, maxSize = 600) {
+function resizeImage(file, maxSize = 800) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("No se pudo leer el archivo"));
@@ -232,25 +358,43 @@ async function setPlayerImage(playerId, file) {
     alert("Selecciona un archivo de imagen válido.");
     return;
   }
+  let dataUrl;
   try {
-    const dataUrl = await resizeImage(file);
-    const previous = state.images[playerId];
-    state.images[playerId] = dataUrl;
-    if (!saveJSON(STORAGE_KEYS.images, state.images)) {
-      if (previous) state.images[playerId] = previous;
-      else delete state.images[playerId];
-      return;
-    }
-    render();
+    dataUrl = await resizeImage(file);
   } catch (error) {
     alert(error.message);
+    return;
+  }
+
+  // Se muestra al instante y se guarda automáticamente
+  const previous = state.images[playerId];
+  state.images[playerId] = dataUrl;
+  render();
+
+  try {
+    await imageStore.put(playerId, dataUrl);
+    showToast("Imagen guardada");
+  } catch {
+    if (previous) state.images[playerId] = previous;
+    else delete state.images[playerId];
+    render();
+    showToast("No se pudo guardar la imagen. El almacenamiento puede estar lleno.", "error");
   }
 }
 
-function removePlayerImage(playerId) {
+async function removePlayerImage(playerId) {
+  const previous = state.images[playerId];
   delete state.images[playerId];
-  saveJSON(STORAGE_KEYS.images, state.images);
   render();
+
+  try {
+    await imageStore.delete(playerId);
+    showToast("Imagen eliminada");
+  } catch {
+    state.images[playerId] = previous;
+    render();
+    showToast("No se pudo eliminar la imagen.", "error");
+  }
 }
 
 /* =========================================================
@@ -400,7 +544,7 @@ function deletePlayer(id, name) {
   state.customPlayers = state.customPlayers.filter((p) => p.id !== id);
   delete state.images[id];
   saveJSON(STORAGE_KEYS.customPlayers, state.customPlayers);
-  saveJSON(STORAGE_KEYS.images, state.images);
+  imageStore.delete(id).catch(() => {});
   render();
 }
 
@@ -445,4 +589,14 @@ form.addEventListener("submit", (event) => {
   dialog.close();
 });
 
-render();
+/* =========================================================
+   Inicio: carga las imágenes guardadas
+   ========================================================= */
+async function init() {
+  render();
+  state.images = await imageStore.getAll();
+  render();
+  requestPersistentStorage();
+}
+
+init();
