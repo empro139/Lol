@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonora - Música</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Barra lateral (en móvil se convierte en barra inferior) -->
+    <aside class="sidebar">
+      <a class="brand" href="#/home" aria-label="Sonora, inicio">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">Sonora</span>
+      </a>
+
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#/home" class="nav__link" data-route="home">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg>
+          <span>Inicio</span>
+        </a>
+        <a href="#/search" class="nav__link" data-route="search">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <span>Buscar</span>
+        </a>
+        <a href="#/library" class="nav__link" data-route="library">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M4 4h2v16H4zm5 0h2v16H9zm4.6.9 1.9-.6 4.9 15-1.9.6z"/></svg>
+          <span>Tu biblioteca</span>
+        </a>
+      </nav>
+
+      <div class="account" id="account"></div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="main" id="main">
+      <header class="topbar">
+        <div class="topbar__history">
+          <button type="button" class="icon-btn" id="backBtn" aria-label="Atrás">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="forwardBtn" aria-label="Adelante">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M10 6 8.6 7.4l4.6 4.6-4.6 4.6L10 18l6-6z"/></svg>
+          </button>
+        </div>
+
+        <form class="search-box hidden" id="searchForm" role="search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="¿Qué quieres escuchar?"
+            autocomplete="off"
+            aria-label="Buscar canciones, artistas, álbumes o playlists"
+          />
+        </form>
+
+        <div class="topbar__right" id="topbarRight"></div>
+      </header>
+
+      <div class="view" id="view" aria-live="polite"></div>
+
+      <footer class="credits">
+        <p>Datos y reproducción proporcionados por Spotify cuando conectas tu cuenta.</p>
+      </footer>
+    </main>
+
+    <!-- Reproductor -->
+    <footer class="player" id="player">
+      <div class="player__track">
+        <div class="player__cover" id="playerCover"></div>
+        <div class="player__info">
+          <span class="player__title" id="playerTitle">Nada sonando</span>
+          <span class="player__artist" id="playerArtist">Elige una canción</span>
+        </div>
+        <button type="button" class="icon-btn like-btn hidden" id="playerLike" aria-label="Me gusta"></button>
+      </div>
+
+      <div class="player__center">
+        <div class="player__controls">
+          <button type="button" class="icon-btn" id="prevBtn" aria-label="Anterior" disabled>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+          </button>
+          <button type="button" class="play-btn" id="playBtn" aria-label="Reproducir" disabled></button>
+          <button type="button" class="icon-btn" id="nextBtn" aria-label="Siguiente" disabled>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6 18l8.5-6L6 6zM16 6v12h2V6z"/></svg>
+          </button>
+        </div>
+        <div class="player__progress" id="playerProgress">
+          <span class="time" id="timeCurrent">0:00</span>
+          <div class="bar"><div class="bar__fill" id="progressFill"></div></div>
+          <span class="time" id="timeTotal">0:00</span>
+        </div>
+        <!-- Reproductor oficial de Spotify (solo con la cuenta conectada) -->
+        <div class="player__embed hidden" id="playerEmbed"></div>
+      </div>
+
+      <div class="player__right">
+        <a class="open-link hidden" id="playerOpen" target="_blank" rel="noopener">Abrir en Spotify</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Ventana con instrucciones de conexión -->
+  <dialog class="dialog" id="setupDialog">
+    <h2>Conectar con Spotify</h2>
+    <p>Para usar tu cuenta todavía falta configurar el <strong>Client ID</strong> de tu app de Spotify.</p>
+    <ol>
+      <li>Entra a <strong>developer.spotify.com/dashboard</strong> y crea una app.</li>
+      <li>En <strong>Redirect URIs</strong> agrega exactamente esta dirección:
+        <code id="redirectUriText"></code>
+      </li>
+      <li>Marca <strong>Web API</strong> y guarda.</li>
+      <li>Copia el <strong>Client ID</strong> y pégalo en <code>CONFIG.clientId</code> al inicio de <code>script.js</code>.</li>
+    </ol>
+    <p class="dialog__note">Los pasos completos están en el archivo README.md del proyecto.</p>
+    <form method="dialog" class="dialog__actions">
+      <button class="btn btn--primary">Entendido</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
